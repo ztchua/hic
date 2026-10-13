@@ -13,6 +13,16 @@ import (
 //go:embed web
 var webFS embed.FS
 
+// withBasePath mounts h so it is served under base (e.g. "/poop"). A request
+// to the bare base redirects to base+"/" so relative asset and API paths in the
+// page resolve under the prefix.
+func withBasePath(base string, h http.Handler) http.Handler {
+	mux := http.NewServeMux()
+	mux.Handle(base, http.RedirectHandler(base+"/", http.StatusMovedPermanently))
+	mux.Handle(base+"/", http.StripPrefix(base, h))
+	return mux
+}
+
 func newHandler(store *Store) http.Handler {
 	mux := http.NewServeMux()
 

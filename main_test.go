@@ -15,6 +15,10 @@ import (
 )
 
 func newTestServer(t *testing.T) *httptest.Server {
+	return newTestServerAtBase(t, "")
+}
+
+func newTestServerAtBase(t *testing.T, base string) *httptest.Server {
 	t.Helper()
 
 	store, err := InitStore(filepath.Join(t.TempDir(), "test.db"))
@@ -23,7 +27,12 @@ func newTestServer(t *testing.T) *httptest.Server {
 	}
 	t.Cleanup(func() { store.Close() })
 
-	srv := httptest.NewServer(newHandler(store))
+	var handler http.Handler = newHandler(store)
+	if base != "" {
+		handler = withBasePath(base, handler)
+	}
+
+	srv := httptest.NewServer(handler)
 	t.Cleanup(srv.Close)
 	return srv
 }
@@ -316,6 +325,48 @@ func TestDaysSinceLast(t *testing.T) {
 	}
 	if *stats.DaysSinceLast != 4 {
 		t.Errorf("daysSinceLast = %d, want 4", *stats.DaysSinceLast)
+	}
+}
+
+func TestServesUnderBasePath(t *testing.T) {
+	srv := newTestServerAtBase(t, "/poop")
+
+	client := &http.Client{CheckRedirect: func(*http.Request, []*http.Request) error {
+		return http.ErrUseLastResponse
+	}}
+
+	resp, err := client.Get(srv.URL + "/poop")
+	if err != nil {
+		t.Fatalf("GET /poop: %v", err)
+	}
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusMovedPermanently {
+		t.Errorf("GET /poop status = %d, want 301", resp.StatusCode)
+	}
+	if loc := resp.Header.Get("Location"); loc != "/poop/" {
+		t.Errorf("GET /poop Location = %q, want /poop/", loc)
+	}
+
+	resp, err = http.Get(srv.URL + "/poop/")
+	if err != nil {
+		t.Fatalf("GET /poop/: %v", err)
+	}
+	body, _ := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("GET /poop/ status = %d, want 200", resp.StatusCode)
+	}
+	if !strings.Contains(string(body), `id="records"`) {
+		t.Errorf("prefixed index did not look like the app shell")
+	}
+
+	resp, err = http.Get(srv.URL + "/poop/api/records")
+	if err != nil {
+		t.Fatalf("GET /poop/api/records: %v", err)
+	}
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("GET /poop/api/records status = %d, want 200", resp.StatusCode)
 	}
 }
 

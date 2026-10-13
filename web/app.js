@@ -202,8 +202,8 @@ async function loadRecords({ resetPage = false } = {}) {
 
   try {
     const [pageData, stats] = await Promise.all([
-      fetchJSON(`/api/records?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`),
-      fetchJSON(`/api/stats?year=${currentYear()}`),
+      fetchJSON(`api/records?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`),
+      fetchJSON(`api/stats?year=${currentYear()}`),
     ]);
 
     const pages = Math.max(1, Math.ceil(pageData.total / PAGE_SIZE));
@@ -399,7 +399,7 @@ els.dialog.addEventListener("close", () => {
 
 async function deleteRecord(id) {
   try {
-    await request(`/api/records/${id}`, { method: "DELETE" });
+    await request(`api/records/${id}`, { method: "DELETE" });
     clearError();
     await loadRecords();
   } catch (err) {
@@ -438,7 +438,7 @@ els.form.addEventListener("submit", async (event) => {
   try {
     submit.setAttribute("aria-busy", "true");
     submit.disabled = true;
-    await request("/api/records", {
+    await request("api/records", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

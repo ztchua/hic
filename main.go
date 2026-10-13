@@ -16,7 +16,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:    ":7878",
-		Handler: newHandler(store),
+		Handler: withBasePath("/poop", newHandler(store)),
 	}
 
 	log.Println("Starting server on localhost:7878")
