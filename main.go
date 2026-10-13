@@ -15,7 +15,7 @@ func main() {
 	defer store.Close()
 
 	server := &http.Server{
-		Addr:    "0.0.0.0:7878",
+		Addr:    ":7878",
 		Handler: newHandler(store),
 	}
 
