@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>hic: how is Clover</title>
+    <meta
+      name="description"
+      content="Clover's litter box log. Track texture, smell and timing. Everything is stored in a local SQLite database."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      /* Set the theme before first paint so a dark-mode reader never sees a
+         flash of the warm paper page. Stored per browser, no server round trip. */
+      (function () {
+        try {
+          var stored = localStorage.getItem("hic-theme");
+          var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.setAttribute(
+            "data-theme",
+            stored || (prefersDark ? "dark" : "light"),
+          );
+        } catch (err) {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- Icon sprite. Lucide geometry, stroke on currentColor, 24px grid.
+         No emoji anywhere in this interface; every glyph is a real vector. -->
+    <svg class="sprite" aria-hidden="true" focusable="false">
+      <defs>
+        <symbol id="i-cat" viewBox="0 0 24 24">
+          <path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z" />
+          <path d="M8 14v.5" /><path d="M16 14v.5" /><path d="M11.25 16.25h1.5L12 17l-.75-.75Z" />
+        </symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />
+        </symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
+        </symbol>
+        <symbol id="i-calendar" viewBox="0 0 24 24">
+          <path d="M8 2v4" /><path d="M16 2v4" /><rect x="3" y="4" width="18" height="18" rx="2" />
+          <path d="M3 10h18" />
+        </symbol>
+        <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+        <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" /></symbol>
+        <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="M12 5v14" /></symbol>
+        <symbol id="i-trash" viewBox="0 0 24 24">
+          <path d="M3 6h18" />
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          <path d="M10 11v6" /><path d="M14 11v6" />
+        </symbol>
+        <symbol id="i-inbox" viewBox="0 0 24 24">
+          <path d="M22 12h-6l-2 3h-4l-2-3H2" />
+          <path
+            d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"
+          />
+        </symbol>
+        <symbol id="i-check-circle" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" /><path d="m8.5 12.5 2.5 2.5 4.5-5" />
+        </symbol>
+        <symbol id="i-alert-triangle" viewBox="0 0 24 24">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+          <path d="M12 9v4" /><path d="M12 17h.01" />
+        </symbol>
+        <symbol id="i-info" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" />
+        </symbol>
+        <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5" /><path d="m5 12 7-7 7 7" /></symbol>
+        <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></symbol>
+      </defs>
+    </svg>
+
+    <header class="masthead">
+      <a class="brand" href="#main" aria-label="hic, how is Clover">
+        <span class="brand-mark" aria-hidden="true">
+          <svg class="icon"><use href="#i-cat" /></svg>
+        </span>
+        <span class="brand-name">hic</span>
+      </a>
+      <button class="icon-button" id="theme-toggle" type="button" aria-pressed="false">
+        <svg class="icon" aria-hidden="true"><use href="#i-moon" id="theme-icon" /></svg>
+        <span class="sr-only" id="theme-label">Switch to the dark theme</span>
+      </button>
+    </header>
+
+    <main id="main" class="page" tabindex="-1">
+      <div class="page-head">
+        <h1 class="page-title">How is Clover?</h1>
+        <p class="page-sub">
+          A litter box log for Clover. Texture, smell and timing, kept in a local
+          SQLite file on this machine and never sent anywhere.
+        </p>
+      </div>
+
+      <p class="status status-neutral load-status" id="load-status" role="status" aria-live="polite">
+        <svg class="icon" aria-hidden="true"><use href="#i-clock" /></svg>
+        <span>Loading Clover's log</span>
+      </p>
+
+      <!-- Band 1: one thing leads. The gap between entries is the lead number;
+           the supporting figures stay deliberately quiet beside it. -->
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="card hero-lead">
+          <p class="eyebrow" id="hero-heading">Time since the last visit</p>
+          <p class="figure" id="days-figure">--</p>
+          <p class="figure-caption" id="days-caption">Waiting for the first visit</p>
+          <p class="status status-neutral" id="rhythm-status">
+            <svg class="icon" aria-hidden="true"><use href="#i-info" /></svg>
+            <span id="rhythm-status-text">The first visit starts the count</span>
+          </p>
+        </div>
+
+        <div class="card hero-side">
+          <h2 class="side-title">At a glance</h2>
+          <dl class="stat-list">
+            <div class="stat">
+              <dt>Visits</dt>
+              <dd id="stat-total">0</dd>
+            </div>
+            <div class="stat">
+              <dt>This year</dt>
+              <dd id="stat-year">0</dd>
+            </div>
+            <div class="stat">
+              <dt>Most common</dt>
+              <dd id="stat-common">Nothing yet</dd>
+            </div>
+          </dl>
+          <p class="side-note" id="side-note">
+            Log a visit and hic will fill this panel in.
+          </p>
+        </div>
+      </section>
+
+      <!-- Band 2: empty state owns the viewport it sits in, and hands over the
+           first action rather than floating under the header. -->
+      <section class="card empty" id="empty-state" hidden aria-labelledby="empty-heading">
+        <span class="empty-mark" aria-hidden="true">
+          <svg class="icon"><use href="#i-inbox" /></svg>
+        </span>
+        <h2 class="empty-title" id="empty-heading">No visits logged yet</h2>
+        <p class="empty-body">
+          Once you log a visit, hic charts Clover's texture and smell split, draws the
+          year month by month, and keeps every visit on one list.
+        </p>
+        <button class="button button-primary" id="empty-cta" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>
+          Log the first visit
+        </button>
+      </section>
+
+      <!-- Band 3: breakdown. Two dense panels, not four equal cards. -->
+      <section class="breakdown" id="breakdown" aria-labelledby="breakdown-heading" hidden>
+        <div class="section-head">
+          <h2 class="section-title" id="breakdown-heading">Breakdown</h2>
+          <p class="section-sub">Every visit, all time</p>
+        </div>
+        <div class="bento">
+          <article class="card panel">
+            <header class="panel-head">
+              <h3 class="panel-title">Texture</h3>
+              <p class="panel-sub">Consistency of the stool</p>
+            </header>
+            <div class="chart-box chart-box-donut">
+              <canvas id="texture-chart" role="img" aria-label="Texture split, no data yet"></canvas>
+              <p class="donut-center">
+                <span class="donut-value" id="texture-total">0</span>
+                <span class="donut-label">visits</span>
+              </p>
+            </div>
+            <ul class="legend" id="texture-legend"></ul>
+          </article>
+
+          <article class="card panel">
+            <header class="panel-head">
+              <h3 class="panel-title">Smell</h3>
+              <p class="panel-sub">Odour on the day</p>
+            </header>
+            <div class="chart-box chart-box-donut">
+              <canvas id="smell-chart" role="img" aria-label="Smell split, no data yet"></canvas>
+              <p class="donut-center">
+                <span class="donut-value" id="smell-total">0</span>
+                <span class="donut-label">visits</span>
+              </p>
+            </div>
+            <ul class="legend" id="smell-legend"></ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- Band 4: full-width trend band resets the rhythm after the two panels. -->
+      <section class="card trend" id="trend" aria-labelledby="trend-heading" hidden>
+        <header class="panel-head panel-head-row">
+          <div>
+            <h2 class="panel-title" id="trend-heading">Month by month</h2>
+            <p class="panel-sub">
+              Visits per month in <span id="trend-year">this year</span>, split by
+              texture and smell
+            </p>
+          </div>
+          <svg class="icon icon-lg panel-head-icon" aria-hidden="true">
+            <use href="#i-calendar" />
+          </svg>
+        </header>
+        <div class="chart-box chart-box-trend">
+          <canvas id="ytd-chart" role="img" aria-label="Visits per month, no data yet"></canvas>
+        </div>
+        <ul class="legend legend-trend" id="trend-legend"></ul>
+      </section>
+
+      <!-- Band 5: composer. Asymmetric split so it never echoes the panels above. -->
+      <section class="composer" aria-labelledby="composer-heading">
+        <div class="card compose">
+          <header class="panel-head">
+            <h2 class="panel-title" id="composer-heading">Log a litter box visit</h2>
+            <p class="panel-sub">Texture and smell, then save</p>
+          </header>
+          <form id="create-record">
+            <fieldset class="field">
+              <legend class="field-label">Texture</legend>
+              <div class="segmented">
+                <label class="segment">
+                  <input class="segment-input" type="radio" name="texture" value="Soft" required />
+                  <span class="segment-face">Soft</span>
+                </label>
+                <label class="segment">
+                  <input class="segment-input" type="radio" name="texture" value="Normal" />
+                  <span class="segment-face">Normal</span>
+                </label>
+                <label class="segment">
+                  <input class="segment-input" type="radio" name="texture" value="Hard" />
+                  <span class="segment-face">Hard</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="field">
+              <legend class="field-label">Smell</legend>
+              <div class="segmented">
+                <label class="segment">
+                  <input class="segment-input" type="radio" name="smell" value="Strong" required />
+                  <span class="segment-face">Strong</span>
+                </label>
+                <label class="segment">
+                  <input class="segment-input" type="radio" name="smell" value="Normal" />
+                  <span class="segment-face">Normal</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="field">
+              <label class="field-label" for="comments">
+                Comments <span class="field-optional">Optional</span>
+              </label>
+              <input
+                class="text-input"
+                id="comments"
+                type="text"
+                name="comments"
+                autocomplete="off"
+                placeholder="Anything worth noting, such as a food change"
+              />
+            </div>
+
+            <div class="form-actions">
+              <button class="button button-primary" type="submit">
+                <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>
+                Save visit
+              </button>
+              <p class="form-note">Saved with the current date and time.</p>
+            </div>
+          </form>
+        </div>
+
+        <aside class="card guide" aria-labelledby="guide-heading">
+          <h2 class="panel-title" id="guide-heading">What the chart shows</h2>
+          <ul class="guide-list">
+            <li>
+              <span class="guide-mark" aria-hidden="true">
+                <svg class="icon"><use href="#i-check-circle" /></svg>
+              </span>
+              <span><strong>Soft</strong> and <strong>Normal</strong> cover most
+                visits. The odd off day is normal for a cat.</span>
+            </li>
+            <li>
+              <span class="guide-mark" aria-hidden="true">
+                <svg class="icon"><use href="#i-alert-triangle" /></svg>
+              </span>
+              <span><strong>Hard</strong> stools, or no visit for a couple of days,
+                are worth a note in the comments and a word with your vet.</span>
+            </li>
+          </ul>
+          <p class="guide-note">
+            hic only describes what you logged. It is not veterinary advice.
+          </p>
+        </aside>
+      </section>
+
+      <!-- Band 6: detail after summary. The table really sorts. -->
+      <section class="card records" id="records-section" aria-labelledby="records-heading" hidden>
+        <header class="panel-head panel-head-row">
+          <div>
+            <h2 class="panel-title" id="records-heading">Visit history</h2>
+            <p class="panel-sub">Newest first. Click a heading to sort this page.</p>
+          </div>
+          <p class="count-chip" id="records-count">0 visits</p>
+        </header>
+
+        <div
+          class="table-scroll"
+          tabindex="0"
+          role="region"
+          aria-label="Visit history table, scrolls sideways on a narrow screen"
+        >
+          <table id="records">
+            <caption class="sr-only">Clover's litter box visits, newest first</caption>
+            <thead>
+              <tr>
+                <th scope="col" aria-sort="descending">
+                  <button class="sort" type="button" data-col="0">
+                    When
+                    <svg class="icon sort-icon" aria-hidden="true"><use href="#i-chevron-down" /></svg>
+                  </button>
+                </th>
+                <th scope="col" aria-sort="none">
+                  <button class="sort" type="button" data-col="1">
+                    Texture
+                    <svg class="icon sort-icon" aria-hidden="true"><use href="#i-chevron-down" /></svg>
+                  </button>
+                </th>
+                <th scope="col" aria-sort="none">
+                  <button class="sort" type="button" data-col="2">
+                    Smell
+                    <svg class="icon sort-icon" aria-hidden="true"><use href="#i-chevron-down" /></svg>
+                  </button>
+                </th>
+                <th scope="col" aria-sort="none">
+                  <button class="sort" type="button" data-col="3">
+                    Comments
+                    <svg class="icon sort-icon" aria-hidden="true"><use href="#i-chevron-down" /></svg>
+                  </button>
+                </th>
+                <th scope="col"><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="records-body"></tbody>
+          </table>
+        </div>
+
+        <nav class="pager" aria-label="Visit history pages">
+          <button class="button button-secondary" id="prev" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-chevron-left" /></svg>
+            Previous
+          </button>
+          <p class="pager-info" id="page-info">Page 1 of 1</p>
+          <button class="button button-secondary" id="next" type="button">
+            Next
+            <svg class="icon" aria-hidden="true"><use href="#i-chevron-right" /></svg>
+          </button>
+        </nav>
+      </section>
+
+      <p class="status status-error" id="status" role="status" aria-live="polite" hidden>
+        <svg class="icon" aria-hidden="true"><use href="#i-alert-triangle" /></svg>
+        <span id="status-text"></span>
+      </p>
+    </main>
+
+    <footer class="site-foot">
+      <div class="foot-inner">
+        <p class="foot-line">
+          <span class="brand-mark brand-mark-sm" aria-hidden="true">
+            <svg class="icon"><use href="#i-cat" /></svg>
+          </span>
+          <strong>hic</strong> is short for how is Clover. Visits live in the local
+          SQLite database and never leave this machine.
+        </p>
+        <p class="foot-meta" id="foot-meta">Waiting for the first visit</p>
+        <a class="foot-top" href="#main">
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow-up" /></svg>
+          Back to top
+        </a>
+      </div>
+    </footer>
+
+    <!-- Confirm step for a destructive action. The trigger and this button both
+         wear the destructive token, never the primary one. -->
+    <dialog class="dialog" id="confirm-delete" aria-labelledby="confirm-title">
+      <form method="dialog" class="dialog-form">
+        <span class="dialog-mark" aria-hidden="true">
+          <svg class="icon"><use href="#i-trash" /></svg>
+        </span>
+        <h2 class="dialog-title" id="confirm-title">Delete this visit?</h2>
+        <p class="dialog-body" id="confirm-body">
+          The visit is removed from the log. This cannot be undone.
+        </p>
+        <div class="dialog-actions">
+          <button class="button button-secondary" value="cancel" type="submit">
+            <svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>
+            Keep it
+          </button>
+          <button class="button button-destructive" id="confirm-ok" value="confirm" type="submit">
+            <svg class="icon" aria-hidden="true"><use href="#i-trash" /></svg>
+            Delete visit
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="vendor/chart.umd.min.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

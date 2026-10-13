@@ -1,0 +1,445 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "Source of truth for hic. DTCG, 3-tier (primitive -> semantic -> component), light + dark. Direction: Warm Soft-SaaS resolved through a warm-editorial palette (terracotta on warm paper). Edit one value here, run `node <kit>/scripts/build_tokens.mjs --in design-tokens.json --out web/theme.css`, and every screen follows.",
+
+  "primitive": {
+    "$description": "Raw palette. Never referenced from a component.",
+
+    "warm": {
+      "25":  { "$type": "color", "$value": "#fffdfa" },
+      "50":  { "$type": "color", "$value": "#faf8f4" },
+      "100": { "$type": "color", "$value": "#f5f1ea" },
+      "200": { "$type": "color", "$value": "#ede7de" },
+      "300": { "$type": "color", "$value": "#e3dbd0" },
+      "400": { "$type": "color", "$value": "#b9afa1" },
+      "500": { "$type": "color", "$value": "#8e8477" },
+      "600": { "$type": "color", "$value": "#6f6559" },
+      "700": { "$type": "color", "$value": "#5a534a" },
+      "800": { "$type": "color", "$value": "#3a352e" },
+      "900": { "$type": "color", "$value": "#23201c" }
+    },
+
+    "warmDark": {
+      "$description": "Dark-mode neutrals. Not an inversion of the light ramp: rebalanced so surfaces lift with lightness and text stays warm.",
+      "50":  { "$type": "color", "$value": "#f5f0e8" },
+      "300": { "$type": "color", "$value": "#c4bcb0" },
+      "400": { "$type": "color", "$value": "#9a9184" },
+      "600": { "$type": "color", "$value": "#7d7365" },
+      "700": { "$type": "color", "$value": "#37312a" },
+      "800": { "$type": "color", "$value": "#2b261e" },
+      "850": { "$type": "color", "$value": "#201c16" },
+      "900": { "$type": "color", "$value": "#16130f" },
+      "950": { "$type": "color", "$value": "#100e0a" }
+    },
+
+    "brand": {
+      "$description": "Terracotta. 600 carries white text (5.3:1) and works as body link ink on the page.",
+      "50":  { "$type": "color", "$value": "#fbf1eb" },
+      "100": { "$type": "color", "$value": "#f6dfd2" },
+      "200": { "$type": "color", "$value": "#edc3ac" },
+      "300": { "$type": "color", "$value": "#e2a483" },
+      "400": { "$type": "color", "$value": "#d6845c" },
+      "500": { "$type": "color", "$value": "#c8623a" },
+      "600": { "$type": "color", "$value": "#b04e28" },
+      "700": { "$type": "color", "$value": "#93401f" },
+      "800": { "$type": "color", "$value": "#76331a" },
+      "900": { "$type": "color", "$value": "#5c2815" }
+    },
+
+    "forest": {
+      "50":  { "$type": "color", "$value": "#eef4f1" },
+      "300": { "$type": "color", "$value": "#7fb09c" },
+      "600": { "$type": "color", "$value": "#2f5b4f" },
+      "700": { "$type": "color", "$value": "#264a40" }
+    },
+
+    "red": {
+      "50":  { "$type": "color", "$value": "#fcefed" },
+      "100": { "$type": "color", "$value": "#f7dad6" },
+      "300": { "$type": "color", "$value": "#e9a69f" },
+      "600": { "$type": "color", "$value": "#b3261e" },
+      "700": { "$type": "color", "$value": "#8f1d17" },
+      "400": { "$type": "color", "$value": "#f0a099" }
+    },
+
+    "green": {
+      "50":  { "$type": "color", "$value": "#edf5ef" },
+      "100": { "$type": "color", "$value": "#d6e9da" },
+      "300": { "$type": "color", "$value": "#a6cfb0" },
+      "400": { "$type": "color", "$value": "#86c98f" },
+      "600": { "$type": "color", "$value": "#2f6b3c" },
+      "700": { "$type": "color", "$value": "#24532e" }
+    },
+
+    "amber": {
+      "50":  { "$type": "color", "$value": "#fbf3e2" },
+      "100": { "$type": "color", "$value": "#f5e4c3" },
+      "300": { "$type": "color", "$value": "#e0c588" },
+      "400": { "$type": "color", "$value": "#e0b055" },
+      "600": { "$type": "color", "$value": "#b45309" },
+      "700": { "$type": "color", "$value": "#8a5a00" }
+    },
+
+    "blue": {
+      "50":  { "$type": "color", "$value": "#eef3fb" },
+      "300": { "$type": "color", "$value": "#a9c4ec" },
+      "600": { "$type": "color", "$value": "#2c63b8" },
+      "700": { "$type": "color", "$value": "#244f94" }
+    },
+
+    "white": { "$type": "color", "$value": "#ffffff" }
+  },
+
+  "semantic": {
+    "$description": "Purpose tokens. This is the tier components and pages reference.",
+
+    "surface": {
+      "page":    { "$type": "color", "$value": "{primitive.warm.50}" },
+      "card":    { "$type": "color", "$value": "{primitive.warm.25}" },
+      "raised":  { "$type": "color", "$value": "{primitive.warm.100}" },
+      "sunken":  { "$type": "color", "$value": "{primitive.warm.200}" },
+      "inverse": { "$type": "color", "$value": "{primitive.warm.900}" },
+      "scrim":   { "$type": "color", "$value": "rgba(22, 19, 15, 0.62)", "$description": "Behind the confirm dialog." }
+    },
+
+    "text": {
+      "primary":    { "$type": "color", "$value": "{primitive.warm.900}" },
+      "secondary":  { "$type": "color", "$value": "{primitive.warm.700}" },
+      "tertiary":   { "$type": "color", "$value": "{primitive.warm.600}" },
+      "disabled":   { "$type": "color", "$value": "{primitive.warm.400}" },
+      "on-action":  { "$type": "color", "$value": "{primitive.white}" },
+      "on-inverse": { "$type": "color", "$value": "{primitive.warm.50}" },
+      "link":       { "$type": "color", "$value": "{primitive.brand.600}" },
+      "link-hover": { "$type": "color", "$value": "{primitive.brand.700}" }
+    },
+
+    "border": {
+      "default": { "$type": "color", "$value": "{primitive.warm.300}", "$description": "Decorative only: dividers, card edges." },
+      "strong":  { "$type": "color", "$value": "{primitive.warm.500}", "$description": "Essential control boundary. 3.5:1 on the page." },
+      "focus":   { "$type": "color", "$value": "{primitive.brand.600}" },
+      "error":   { "$type": "color", "$value": "{primitive.red.600}" },
+      "inverse": { "$type": "color", "$value": "{primitive.warm.800}" }
+    },
+
+    "action": {
+      "primary":           { "$type": "color", "$value": "{primitive.brand.600}" },
+      "primary-hover":     { "$type": "color", "$value": "{primitive.brand.700}" },
+      "primary-active":    { "$type": "color", "$value": "{primitive.brand.800}" },
+      "secondary":         { "$type": "color", "$value": "{primitive.warm.100}" },
+      "secondary-hover":   { "$type": "color", "$value": "{primitive.warm.200}" },
+      "secondary-active":  { "$type": "color", "$value": "{primitive.warm.300}" },
+      "destructive":       { "$type": "color", "$value": "{primitive.red.600}", "$description": "Delete/Remove only. Never action.primary." },
+      "destructive-hover": { "$type": "color", "$value": "{primitive.red.700}" }
+    },
+
+    "feedback": {
+      "success":          { "$type": "color", "$value": "{primitive.green.600}" },
+      "success-surface":  { "$type": "color", "$value": "{primitive.green.50}" },
+      "success-border":   { "$type": "color", "$value": "{primitive.green.300}" },
+      "warning":          { "$type": "color", "$value": "{primitive.amber.700}" },
+      "warning-surface":  { "$type": "color", "$value": "{primitive.amber.50}" },
+      "warning-border":   { "$type": "color", "$value": "{primitive.amber.300}" },
+      "error":            { "$type": "color", "$value": "{primitive.red.600}" },
+      "error-surface":    { "$type": "color", "$value": "{primitive.red.50}" },
+      "error-border":     { "$type": "color", "$value": "{primitive.red.300}" },
+      "info":             { "$type": "color", "$value": "{primitive.blue.600}" },
+      "info-surface":     { "$type": "color", "$value": "{primitive.blue.50}" },
+      "info-border":      { "$type": "color", "$value": "{primitive.blue.300}" }
+    },
+
+    "interactive": {
+      "selected-bg":     { "$type": "color", "$value": "{primitive.brand.50}" },
+      "selected-border": { "$type": "color", "$value": "{primitive.brand.200}" },
+      "hover-overlay":   { "$type": "color", "$value": "rgba(22, 19, 15, 0.04)" },
+      "active-overlay":  { "$type": "color", "$value": "rgba(22, 19, 15, 0.08)" }
+    },
+
+    "chart": {
+      "$description": "Chart scaffolding. Series colours come from data-viz.categorical; these are the ring, grid and axis.",
+      "track":      { "$type": "color", "$value": "{primitive.warm.200}", "$description": "Unfilled doughnut ring and bar track." },
+      "grid":       { "$type": "color", "$value": "{primitive.warm.300}", "$description": "Decorative gridlines." },
+      "axis-line":  { "$type": "color", "$value": "{primitive.warm.500}" },
+      "axis-label": { "$type": "color", "$value": "{primitive.warm.700}" }
+    }
+  },
+
+  "component": {
+    "$description": "Scoped to one component. Component code references this tier.",
+
+    "button": {
+      "primary-bg":           { "$type": "color", "$value": "{semantic.action.primary}" },
+      "primary-bg-hover":     { "$type": "color", "$value": "{semantic.action.primary-hover}" },
+      "primary-bg-active":    { "$type": "color", "$value": "{semantic.action.primary-active}" },
+      "primary-text":         { "$type": "color", "$value": "{semantic.text.on-action}" },
+      "secondary-bg":         { "$type": "color", "$value": "{semantic.action.secondary}" },
+      "secondary-bg-hover":   { "$type": "color", "$value": "{semantic.action.secondary-hover}" },
+      "secondary-bg-active":  { "$type": "color", "$value": "{semantic.action.secondary-active}" },
+      "secondary-text":       { "$type": "color", "$value": "{semantic.text.primary}" },
+      "secondary-border":     { "$type": "color", "$value": "{semantic.border.default}" },
+      "destructive-bg":       { "$type": "color", "$value": "{semantic.action.destructive}" },
+      "destructive-bg-hover": { "$type": "color", "$value": "{semantic.action.destructive-hover}" },
+      "destructive-text":     { "$type": "color", "$value": "{semantic.text.on-action}" },
+      "disabled-bg":          { "$type": "color", "$value": "{semantic.surface.sunken}" },
+      "disabled-text":        { "$type": "color", "$value": "{semantic.text.disabled}" }
+    },
+
+    "input": {
+      "bg":           { "$type": "color", "$value": "{semantic.surface.card}" },
+      "border":       { "$type": "color", "$value": "{semantic.border.strong}" },
+      "border-hover": { "$type": "color", "$value": "{semantic.text.secondary}" },
+      "border-focus": { "$type": "color", "$value": "{semantic.border.focus}" },
+      "border-error": { "$type": "color", "$value": "{semantic.border.error}" },
+      "text":         { "$type": "color", "$value": "{semantic.text.primary}" },
+      "placeholder":  { "$type": "color", "$value": "{semantic.text.tertiary}" }
+    },
+
+    "card": {
+      "bg":     { "$type": "color", "$value": "{semantic.surface.card}" },
+      "border": { "$type": "color", "$value": "{semantic.border.default}" }
+    },
+
+    "badge": {
+      "neutral-bg":   { "$type": "color", "$value": "{semantic.surface.raised}" },
+      "neutral-text": { "$type": "color", "$value": "{semantic.text.secondary}" }
+    }
+  },
+
+  "dark": {
+    "$description": "Swaps the SEMANTIC tier. Primitives never change. Applied via [data-theme=\"dark\"].",
+    "surface": {
+      "page":    { "$type": "color", "$value": "{primitive.warmDark.900}" },
+      "card":    { "$type": "color", "$value": "{primitive.warmDark.850}" },
+      "raised":  { "$type": "color", "$value": "{primitive.warmDark.800}" },
+      "sunken":  { "$type": "color", "$value": "{primitive.warmDark.700}" },
+      "inverse": { "$type": "color", "$value": "{primitive.warmDark.950}" },
+      "scrim":   { "$type": "color", "$value": "rgba(0, 0, 0, 0.72)" }
+    },
+    "text": {
+      "primary":    { "$type": "color", "$value": "{primitive.warmDark.50}" },
+      "secondary":  { "$type": "color", "$value": "{primitive.warmDark.300}" },
+      "tertiary":   { "$type": "color", "$value": "{primitive.warmDark.400}" },
+      "disabled":   { "$type": "color", "$value": "{primitive.warmDark.600}" },
+      "on-action":  { "$type": "color", "$value": "{primitive.white}" },
+      "on-inverse": { "$type": "color", "$value": "{primitive.warm.50}" },
+      "link":       { "$type": "color", "$value": "{primitive.brand.400}", "$description": "brand.600 is only 3.4:1 on the dark page; the lighter step is required." },
+      "link-hover": { "$type": "color", "$value": "{primitive.brand.300}" }
+    },
+    "border": {
+      "default": { "$type": "color", "$value": "{primitive.warmDark.700}" },
+      "strong":  { "$type": "color", "$value": "{primitive.warmDark.600}" },
+      "focus":   { "$type": "color", "$value": "{primitive.brand.500}" },
+      "error":   { "$type": "color", "$value": "{primitive.red.400}" },
+      "inverse": { "$type": "color", "$value": "{primitive.warmDark.700}" }
+    },
+    "action": {
+      "primary":           { "$type": "color", "$value": "{primitive.brand.600}" },
+      "primary-hover":     { "$type": "color", "$value": "{primitive.brand.700}" },
+      "primary-active":    { "$type": "color", "$value": "{primitive.brand.800}" },
+      "secondary":         { "$type": "color", "$value": "{primitive.warmDark.800}" },
+      "secondary-hover":   { "$type": "color", "$value": "{primitive.warmDark.700}" },
+      "secondary-active":  { "$type": "color", "$value": "{primitive.warmDark.600}" },
+      "destructive":       { "$type": "color", "$value": "{primitive.red.600}" },
+      "destructive-hover": { "$type": "color", "$value": "{primitive.red.700}" }
+    },
+    "feedback": {
+      "success":         { "$type": "color", "$value": "{primitive.green.400}" },
+      "success-surface": { "$type": "color", "$value": "{primitive.warmDark.800}" },
+      "success-border":  { "$type": "color", "$value": "{primitive.green.700}" },
+      "warning":         { "$type": "color", "$value": "{primitive.amber.400}" },
+      "warning-surface": { "$type": "color", "$value": "{primitive.warmDark.800}" },
+      "warning-border":  { "$type": "color", "$value": "{primitive.amber.700}" },
+      "error":           { "$type": "color", "$value": "{primitive.red.400}" },
+      "error-surface":   { "$type": "color", "$value": "{primitive.warmDark.800}" },
+      "error-border":    { "$type": "color", "$value": "{primitive.red.700}" },
+      "info":            { "$type": "color", "$value": "{primitive.blue.300}" },
+      "info-surface":    { "$type": "color", "$value": "{primitive.warmDark.800}" },
+      "info-border":     { "$type": "color", "$value": "{primitive.blue.700}" }
+    },
+    "interactive": {
+      "selected-bg":     { "$type": "color", "$value": "{primitive.warmDark.800}" },
+      "selected-border": { "$type": "color", "$value": "{primitive.brand.500}" },
+      "hover-overlay":   { "$type": "color", "$value": "rgba(255, 255, 255, 0.06)" },
+      "active-overlay":  { "$type": "color", "$value": "rgba(255, 255, 255, 0.1)" }
+    },
+
+    "chart": {
+      "$description": "Series colours lighten for dark surfaces; chart-1 is 6.7:1 on the dark card.",
+      "1": { "$type": "color", "$value": "#60a5fa" },
+      "2": { "$type": "color", "$value": "#fb923c" },
+      "3": { "$type": "color", "$value": "#34d399" },
+      "4": { "$type": "color", "$value": "#f472b6" },
+      "5": { "$type": "color", "$value": "#a78bfa" },
+      "6": { "$type": "color", "$value": "#22d3ee" },
+      "7": { "$type": "color", "$value": "#fbbf24" },
+      "8": { "$type": "color", "$value": "#94a3b8" },
+      "track":      { "$type": "color", "$value": "{primitive.warmDark.700}" },
+      "grid":       { "$type": "color", "$value": "{primitive.warmDark.700}" },
+      "axis-line":  { "$type": "color", "$value": "{primitive.warmDark.600}" },
+      "axis-label": { "$type": "color", "$value": "{primitive.warmDark.300}" }
+    }
+  },
+
+  "typography": {
+    "fontFamily": {
+      "sans": { "$type": "fontFamily", "$value": ["Inter", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"] },
+      "serif": { "$type": "fontFamily", "$value": ["Fraunces", "Iowan Old Style", "Georgia", "Cambria", "Times New Roman", "serif"], "$description": "Editorial display only: the hero figure and page title." },
+      "mono": { "$type": "fontFamily", "$value": ["JetBrains Mono", "SF Mono", "Consolas", "Menlo", "monospace"] }
+    },
+    "fontSize": {
+      "$description": "Major Third (1.25), base 16.",
+      "xs":   { "$type": "dimension", "$value": "12px" },
+      "sm":   { "$type": "dimension", "$value": "14px" },
+      "base": { "$type": "dimension", "$value": "16px" },
+      "lg":   { "$type": "dimension", "$value": "18px" },
+      "xl":   { "$type": "dimension", "$value": "20px" },
+      "2xl":  { "$type": "dimension", "$value": "24px" },
+      "3xl":  { "$type": "dimension", "$value": "30px" },
+      "4xl":  { "$type": "dimension", "$value": "36px" },
+      "5xl":  { "$type": "dimension", "$value": "48px" },
+      "6xl":  { "$type": "dimension", "$value": "60px" },
+      "7xl":  { "$type": "dimension", "$value": "72px" }
+    },
+    "fontWeight": {
+      "regular":  { "$type": "number", "$value": 400 },
+      "medium":   { "$type": "number", "$value": 500 },
+      "semibold": { "$type": "number", "$value": 600 },
+      "bold":     { "$type": "number", "$value": 700 }
+    },
+    "lineHeight": {
+      "none":    { "$type": "number", "$value": 1 },
+      "tight":   { "$type": "number", "$value": 1.15 },
+      "snug":    { "$type": "number", "$value": 1.3 },
+      "normal":  { "$type": "number", "$value": 1.55 },
+      "relaxed": { "$type": "number", "$value": 1.65 }
+    }
+  },
+
+  "spacing": {
+    "$description": "4px base unit. Integer keys only, so each emits a valid custom property name.",
+    "scale": {
+      "0":  { "$type": "dimension", "$value": "0px" },
+      "1":  { "$type": "dimension", "$value": "4px" },
+      "2":  { "$type": "dimension", "$value": "8px" },
+      "3":  { "$type": "dimension", "$value": "12px" },
+      "4":  { "$type": "dimension", "$value": "16px" },
+      "5":  { "$type": "dimension", "$value": "20px" },
+      "6":  { "$type": "dimension", "$value": "24px" },
+      "7":  { "$type": "dimension", "$value": "28px" },
+      "8":  { "$type": "dimension", "$value": "32px" },
+      "10": { "$type": "dimension", "$value": "40px" },
+      "12": { "$type": "dimension", "$value": "48px" },
+      "16": { "$type": "dimension", "$value": "64px" },
+      "20": { "$type": "dimension", "$value": "80px" },
+      "24": { "$type": "dimension", "$value": "96px" }
+    }
+  },
+
+  "borders": {
+    "radius": {
+      "$description": "Radius language: soft but not pill-shaped. Cards 16, controls 10, small 6, tags full.",
+      "sm":   { "$type": "dimension", "$value": "6px" },
+      "md":   { "$type": "dimension", "$value": "10px" },
+      "lg":   { "$type": "dimension", "$value": "16px" },
+      "full": { "$type": "dimension", "$value": "9999px" }
+    },
+    "radius-semantic": {
+      "button": { "$type": "dimension", "$value": "{borders.radius.md}" },
+      "input":  { "$type": "dimension", "$value": "{borders.radius.md}" },
+      "card":   { "$type": "dimension", "$value": "{borders.radius.lg}" },
+      "modal":  { "$type": "dimension", "$value": "{borders.radius.lg}" },
+      "badge":  { "$type": "dimension", "$value": "{borders.radius.full}" },
+      "swatch": { "$type": "dimension", "$value": "{borders.radius.sm}" }
+    }
+  },
+
+  "shadows": {
+    "$description": "Most surfaces are flat. Elevation is reserved for the dialog and hovered cards.",
+    "elevation": {
+      "none": { "$type": "shadow", "$value": "none" },
+      "sm": {
+        "$type": "shadow",
+        "$value": [
+          { "offsetX": "0px", "offsetY": "1px", "blur": "2px", "spread": "0px", "color": "rgba(58, 53, 46, 0.06)" }
+        ]
+      },
+      "md": {
+        "$type": "shadow",
+        "$value": [
+          { "offsetX": "0px", "offsetY": "6px", "blur": "16px", "spread": "-4px", "color": "rgba(58, 53, 46, 0.14)" },
+          { "offsetX": "0px", "offsetY": "2px", "blur": "4px", "spread": "-2px", "color": "rgba(58, 53, 46, 0.1)" }
+        ]
+      },
+      "lg": {
+        "$type": "shadow",
+        "$value": [
+          { "offsetX": "0px", "offsetY": "16px", "blur": "40px", "spread": "-8px", "color": "rgba(58, 53, 46, 0.24)" },
+          { "offsetX": "0px", "offsetY": "4px", "blur": "10px", "spread": "-4px", "color": "rgba(58, 53, 46, 0.16)" }
+        ]
+      }
+    },
+    "focus-ring": {
+      "$type": "shadow",
+      "$value": [
+        { "offsetX": "0px", "offsetY": "0px", "blur": "0px", "spread": "2px", "color": "{semantic.surface.page}" },
+        { "offsetX": "0px", "offsetY": "0px", "blur": "0px", "spread": "4px", "color": "{semantic.border.focus}" }
+      ],
+      "$description": "2px page gap + 2px brand ring. Visible on every surface in both themes."
+    }
+  },
+
+  "motion": {
+    "duration": {
+      "instant": { "$type": "duration", "$value": "0ms" },
+      "fast":    { "$type": "duration", "$value": "110ms" },
+      "base":    { "$type": "duration", "$value": "220ms" },
+      "slow":    { "$type": "duration", "$value": "400ms" }
+    },
+    "easing": {
+      "linear":   { "$type": "cubicBezier", "$value": [0, 0, 1, 1] },
+      "out":      { "$type": "cubicBezier", "$value": [0, 0, 0.2, 1] },
+      "in":       { "$type": "cubicBezier", "$value": [0.4, 0, 1, 1] },
+      "in-out":   { "$type": "cubicBezier", "$value": [0.4, 0, 0.2, 1] }
+    }
+  },
+
+  "sizing": {
+    "control": {
+      "sm": { "$type": "dimension", "$value": "32px" },
+      "md": { "$type": "dimension", "$value": "44px" },
+      "lg": { "$type": "dimension", "$value": "52px" }
+    },
+    "icon": {
+      "sm": { "$type": "dimension", "$value": "16px" },
+      "md": { "$type": "dimension", "$value": "20px" },
+      "lg": { "$type": "dimension", "$value": "24px" }
+    },
+    "border": {
+      "thin":   { "$type": "dimension", "$value": "1px" },
+      "medium": { "$type": "dimension", "$value": "2px" }
+    },
+    "layout": {
+      "page-max": { "$type": "dimension", "$value": "76rem", "$description": "Widest the page container grows." },
+      "prose":    { "$type": "dimension", "$value": "46rem", "$description": "Comfortable measure for explanatory copy." },
+      "field":    { "$type": "dimension", "$value": "30rem", "$description": "Single-column form width." }
+    }
+  },
+
+  "opacity": {
+    "disabled": { "$type": "number", "$value": 0.55 }
+  },
+
+  "data-viz": {
+    "$description": "Categorical palette from tokens/data-viz.json (Okabe-Ito inspired). Assigned in order; series also carry a direct label, never hue alone. chart-2 is darkened from #e8710a, which measured 2.91:1 on the warm page and missed the 3:1 graphical-object floor.",
+    "categorical": {
+      "1": { "$type": "color", "$value": "#2563eb" },
+      "2": { "$type": "color", "$value": "#c2610b" },
+      "3": { "$type": "color", "$value": "#0e9f6e" },
+      "4": { "$type": "color", "$value": "#d81b7a" },
+      "5": { "$type": "color", "$value": "#7c3aed" },
+      "6": { "$type": "color", "$value": "#0891b2" },
+      "7": { "$type": "color", "$value": "#b45309" },
+      "8": { "$type": "color", "$value": "#64748b" }
+    },
+    "$note": "Ring, grid and axis scaffolding live at semantic.chart and dark.chart so both themes emit the same variable names."
+  }
+}
